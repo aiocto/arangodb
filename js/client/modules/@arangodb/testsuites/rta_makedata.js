@@ -25,12 +25,6 @@
 // / @author Wilfried Goesgens
 // //////////////////////////////////////////////////////////////////////////////
 
-const functionsDocumentation = {
-  'rta_makedata': 'Release Testautomation Makedata / Checkdata framework'
-};
-const optionsDocumentation = [
-];
-
 const internal = require('internal');
 
 const executeExternal = internal.executeExternal;
@@ -161,6 +155,20 @@ function makeDataWrapper (options) {
 exports.setup = function (testFns, opts, fnDocs, optionsDoc, allTestPaths) {
   Object.assign(allTestPaths, testPaths);
   testFns['rta_makedata'] = makeDataWrapper;
-  for (var attrname in functionsDocumentation) { fnDocs[attrname] = functionsDocumentation[attrname]; }
-  for (var i = 0; i < optionsDocumentation.length; i++) { optionsDoc.push(optionsDocumentation[i]); }
-};
+  tu.CopyIntoObject(fnDocs, {
+    'rta_makedata': 'Release Testautomation Makedata / Checkdata framework'
+  });
+  tu.CopyIntoList(optionsDocumentation, [
+    '   - `rtasource`: source directory of rta-makedata if not 3rdparty.',
+    '   - `rtaNegFilter`: inverse logic to --test.',
+    '   - `makedataArgs`: list of arguments ala --makedataArgs:bigDoc true',
+    '   - `makedataDB`: Database to run makedata with, defaults to _system',
+  ]);
+
+  tu.CopyIntoObject(optionsDefaults, {
+    'rtasource': fs.makeAbsolute(fs.join('.', '3rdParty', 'rta-makedata')),
+    'makedataArgs': undefined,
+    'makedataDB': '_system',
+    'rtaNegFilter': ''
+  });
+}
